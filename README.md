@@ -4,7 +4,7 @@ ADT is a set of Powershell scripts that should simplify the work of Penetration 
 
 There are already a lot of different frameworks out there and I don't want to create another one. The idea of ADT is to fill the gap between what's already available and what might be a useful tool. Comments, ideas and opinions are very welcome.
 
-At the moment, the functionality is divided in 6 scripts, which are briefly described below. See the help section of each Powershell function for more details.
+At the moment, the functionality is divided in multiple scripts, which are briefly described below. See the help section of each Powershell function for more details.
 
 ### Invoke-Profiler
 Invoke-Profiler is an Information Gathering tool that returns useful information for an attacker on User, Computer, Groups and Group Policies. It automatically creates a kind of "management summary" on all information if no parameters are supplied. If a specific profile was chosen (e.g. User), all data is returned as custom powershell objects so it can be reused. CSV and GridView export is also included.
@@ -20,6 +20,10 @@ Identifies all kerberos-enabled Service Accounts in the domain using "Invoke-Pro
 
 ### New-EncryptedScriptLoader
 Point this function at a powershell library of your choice and it creates a single, encrypted, self-decrypting script-loader. This simplifies handling of tools like Powersploit or ADT itself since you dont have to carry a lot of separate files with you, but just a single, encrypted script. In addition, since everything is encrypted, you can easily evade Anti-Virus. Decryption is only done in memory so a typical file based AV will not detect it. AMSI bypass is included too.
+
+### Invoke-ADACLQuery
+This function uses Get-DsAcl to retrieve all ACE's from all ACL's on all computer, user and OU objects in the current Active Directory Domain. Then it runs an analysis based on the chosen query.
+The results can be used to escalate privileges or facilitate attacks by taking advantage of permission issues.
 
 ### Get-HelperFunctions
 This script just contains a bunch of helper functions for the other scripts.
