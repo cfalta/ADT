@@ -580,7 +580,7 @@ $ServiceNameList = @("svc","service","scv","exchange","sharepoint","sql","backup
 $PrivilegedGroups = @("Access Control Assistance Operators","Account Operators","Backup Operators","Cert Publishers","Certificate Service DCOM Access","Cryptographic Operators","DHCP Administrators","DHCP Users","Distributed COM Users","DnsAdmins","Enterprise Admins","Event Log Readers","Group Policy Creator Owners","Hyper-V Administrators","Network Configuration Operators","Performance Log Users","Performance Monitor Users","Print Operators","Remote Desktop Services Users","Schema Admins","Server Operators","Windows Authorization Access Group","WinRMRemoteWMIUsers_")
 
 #Domain Admin or Domain Admin equivalent
-$DomainAdminGroups = @("Domain Admins","Administrators")
+$DomainAdminGroups = @("Domain Admins","Administrators","Domänen-Admins","Administratoren")
 
 #Get all user objects from AD
 $ADSearcher = New-Object -TypeName System.DirectoryServices.DirectorySearcher -ArgumentList [ADSI]
