@@ -585,6 +585,7 @@ $DomainAdminGroups = @("Domain Admins","Administrators","Domänen-Admins","Admin
 #Get all user objects from AD
 $ADSearcher = New-Object -TypeName System.DirectoryServices.DirectorySearcher -ArgumentList [ADSI]
 $ADSearcher.Filter = "(&(objectClass=user)(objectCategory=person))"
+$ADSearcher.PageSize = 200
 $ADObjects = $ADSearcher.Findall()
 
 #Gather general user information
