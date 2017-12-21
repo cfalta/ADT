@@ -200,23 +200,29 @@ function Confirm-ServiceAccount($Account)
 #Checks if an account is disabled by parsing the UserAccountControl attribute
 function Confirm-AccountDisabled($Account)
 {
-    $AttributeUAC = ([convert]::ToString($Account.Properties.useraccountcontrol[0],2)).padleft(32,'0')
+    try
+    {
+        $AttributeUAC = ([convert]::ToString($Account.Properties.useraccountcontrol[0],2)).padleft(32,'0')
 
-    if(-NOT $AttributeUAC)
+        if(-NOT $AttributeUAC)
+        {
+            return "ERROR"
+        }
+
+
+        if(($AttributeUAC.SubString(30,1)) -eq '1')
+        {
+            return $True
+        }
+        else
+        {
+            return $false
+        }
+    }
+    catch
     {
         return "ERROR"
     }
-
-
-    if(($AttributeUAC.SubString(30,1)) -eq '1')
-    {
-        return $True
-    }
-    else
-    {
-        return $false
-    }
-
 }
 
 #Checks if an account is inactive (has not loggon on since one year or more)
@@ -249,21 +255,28 @@ function Confirm-AccountInactive($Account)
 #Checks if an account has the "Password never expires" flag set by parsing the UserAccountControl attribute
 function Confirm-PWDNotExpire($Account)
 {
-    $AttributeUAC = ([convert]::ToString($Account.Properties.useraccountcontrol[0],2)).padleft(32,'0')
+    try
+    {
+        $AttributeUAC = ([convert]::ToString($Account.Properties.useraccountcontrol[0],2)).padleft(32,'0')
 
-    if(-NOT $AttributeUAC)
+        if(-NOT $AttributeUAC)
+        {
+            return "ERROR"
+        }
+
+
+        if(($AttributeUAC.SubString(15,1)) -eq '1')
+        {
+            return $True
+        }
+        else
+        {
+            return $false
+        }
+    }
+    catch
     {
         return "ERROR"
-    }
-
-
-    if(($AttributeUAC.SubString(15,1)) -eq '1')
-    {
-        return $True
-    }
-    else
-    {
-        return $false
     }
 
 }
@@ -279,7 +292,14 @@ function Confirm-PWDLastSet($Account)
     {
         #If password was never set, last set time = account creation time
 
-        return $Account.properties.whencreated[0]
+       if($Account.properties.whencreated[0])
+       {
+            return $Account.properties.whencreated[0]
+       }
+       else
+       {
+            return "ERROR"
+       }
     }
 }
 
@@ -609,11 +629,11 @@ foreach($Obj in $ADObjects)
 
     if($Obj.Properties.description){ $ResultItem | Add-Member -MemberType NoteProperty -Name Description -Value $Obj.Properties.description[0] }else{ $ResultItem | Add-Member -MemberType NoteProperty -Name Description -Value $False}
 
-    $ResultItem | Add-Member -MemberType NoteProperty -Name PasswordNeverExpires -Value (Confirm-PWDNotExpire($Obj)).ToString()
-    $ResultItem | Add-Member -MemberType NoteProperty -Name PasswordLastSet -Value (Confirm-PWDLastSet($Obj)).ToString()
-    $ResultItem | Add-Member -MemberType NoteProperty -Name UserNeverLoggedIn -Value (Confirm-NoLogin($Obj)).ToString()
-    $ResultItem | Add-Member -MemberType NoteProperty -Name isDomainAdmin -Value (Confirm-DomainAdminAccount($Obj)).ToString()
-    $ResultItem | Add-Member -MemberType NoteProperty -Name isDisabled -Value (Confirm-AccountDisabled($Obj)).ToString()
+    try{$ResultItem | Add-Member -MemberType NoteProperty -Name PasswordNeverExpires -Value (Confirm-PWDNotExpire($Obj)).ToString()}catch{$ResultItem | Add-Member -MemberType NoteProperty -Name PasswordNeverExpires -Value "ERROR"}
+    try{$ResultItem | Add-Member -MemberType NoteProperty -Name PasswordLastSet -Value (Confirm-PWDLastSet($Obj)).ToString()}catch{$ResultItem | Add-Member -MemberType NoteProperty -Name PasswordLastSet -Value "ERROR"}
+    try{$ResultItem | Add-Member -MemberType NoteProperty -Name UserNeverLoggedIn -Value (Confirm-NoLogin($Obj)).ToString()}catch{$ResultItem | Add-Member -MemberType NoteProperty -Name UserNeverLoggedIn -Value "ERROR"}
+    try{$ResultItem | Add-Member -MemberType NoteProperty -Name isDomainAdmin -Value (Confirm-DomainAdminAccount($Obj)).ToString()}catch{$ResultItem | Add-Member -MemberType NoteProperty -Name isDomainAdmin -Value "ERROR"}
+    try{$ResultItem | Add-Member -MemberType NoteProperty -Name isDisabled -Value (Confirm-AccountDisabled($Obj)).ToString()}catch{$ResultItem | Add-Member -MemberType NoteProperty -Name isDisabled -Value "ERROR"}
 
 
     $isSVCAccount = Confirm-ServiceAccount($Obj)
