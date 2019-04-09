@@ -1,3 +1,11 @@
+
+
+#ADT is now deprecated. Since the guys from PowerSploit do a better job than I am - have a look at their suite for AD Security tools.
+
+#Though I will still maintain some parts of ADT in a not-at-all-ordered compilation of random scripts :-). So have a look at my other repos.
+
+
+
 ## ADT - Active Directory Toolkit
 
 ADT is a set of Powershell scripts that should simplify the work of Penetration Testers or Auditors, in terms of assessing Active Directory Security. 

